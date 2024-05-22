@@ -24,6 +24,7 @@ structCount2 = 0
 
 # Upgrade variables
 uprice1 = 50
+upgradeCount1 = 0
 
 
 # Updates text when button is clicked
@@ -32,7 +33,9 @@ def click():
     global clickPower
     number += clickPower
     score["text"] = str(number) + " CO2"
-    if number == 100:
+    if number >= 50:
+        upgradeButton1.place(x=33)
+    if number >= 100:
         structButton1.place(x=400)
     if 1200 > number > 1100:
         structButton2.place(x=400, y=20)
@@ -76,10 +79,13 @@ def upgrade1():
     global number
     global clickPower
     global uprice1
+    global upgradeCount1
     if number >= uprice1:
         number -= uprice1
         clickPower += 1
         uprice1 += (uprice1 * 5) - uprice1
+        upgradeCount1 += 1
+        upgradeButton1["text"] = "Click power upgrade: " + str(uprice1) + " CO2 (" + str(upgradeCount1) + ")"
 
 
 def idle():
