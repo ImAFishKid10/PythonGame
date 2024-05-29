@@ -2,6 +2,7 @@
 from tkinter import *
 import tkinter as tk
 import datetime
+import math
 
 start = datetime.datetime.now()
 # Window and window config
@@ -15,8 +16,8 @@ clickPower = 1
 cps = 0
 
 # Struct variables
-sprice1 = 100
-sincrement1 = 10
+sprice1 = 10
+sincrement1 = 1
 structCount1 = 0
 sprice2 = 100
 sincrement2 = 10
@@ -29,41 +30,26 @@ upgradeCount1 = 0
 
 # Updates text when button is clicked
 def click():
-    global number
-    global clickPower
+    global number, clickPower
     number += clickPower
     score["text"] = str(number) + " CO2"
-    if number >= 50:
-        upgradeButton1.place(x=33)
-    if number >= 100:
-        structButton1.place(x=400)
-    if 1200 > number > 1100:
-        structButton2.place(x=400, y=20)
 
 
 # Struct functions: Upgrades the structs and increases the price of given struct
 def struct1():
-    global number
-    global cps
-    global structCount1
-    global sincrement1
-    global sprice1
+    global number, cps, structCount1, sincrement1, sprice1
     if number >= sprice1:
         number -= sprice1
         sprice1 += int(sincrement1)
         sincrement1 += (sincrement1 * 1.3) - sincrement1
         score["text"] = str(number) + " CO2"
-        cps += 1
+        cps += 0.1
         structCount1 += 1
         structButton1["text"] = "Offset/s struct: " + str(sprice1) + " CO2 (" + str(structCount1) + ")"
 
 
 def struct2():
-    global number
-    global cps
-    global structCount2
-    global sincrement2
-    global sprice2
+    global number, cps, structCount2, sincrement2, sprice2
     if number >= sprice2:
         number -= sprice2
         sprice2 += int(sincrement2)
@@ -76,10 +62,7 @@ def struct2():
 
 # Upgrade functions: Upgrades the given thing and increases the price of given upgrade
 def upgrade1():
-    global number
-    global clickPower
-    global uprice1
-    global upgradeCount1
+    global number, clickPower, uprice1, upgradeCount1
     if number >= uprice1:
         number -= uprice1
         clickPower += 1
@@ -89,19 +72,33 @@ def upgrade1():
 
 
 def idle():
-    global number
-    global cps
-    global window
-    global structCount1
+    global number, cps, window, structCount1
+    cps = round(cps, 1)
     number += cps
+    number = round(number, 1)
+    displayNumber = math.floor(number)
+    print(number)
+    print(displayNumber)
+    placeButtons()
     window.after(1000, idle)
     score["text"] = str(number) + " CO2"
     perSecond["text"] = str(cps) + " Offset/s"
+    placeButtons()
+
+
+def placeButtons():
+    global number
+    if number >= 10:
+        structButton1.place(x=400)
+    if number >= 100:
+        structButton2.place(x=400, y=20)
+    if structCount1 == 10:
+        upgradeButton1.place(x=33)
 
 
 # Struct buttons
-structButton1 = Button(window, text="Offset/s struct: 100 CO2 (0)", command=struct1)
-structButton2 = Button(window, text="Offset/s struct: 1100 CO2 (0)", command=struct2)
+structButton1 = Button(window, text="Offset/s struct: 10 CO2 (0)", command=struct1)
+structButton2 = Button(window, text="Offset/s struct: 100 CO2 (0)", command=struct2)
 
 # Upgrade buttons
 upgradeButton1 = Button(window, text="Click power upgrade: 50 CO2 (0)", command=upgrade1)
