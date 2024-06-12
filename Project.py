@@ -15,10 +15,8 @@ displayNumber = 0
 
 # Struct variables
 sprice1 = 10
-sincrement1 = 1
 structCount1 = 0
 sprice2 = 100
-sincrement2 = 10
 structCount2 = 0
 
 # Upgrade variables
@@ -35,22 +33,20 @@ def click():
 
 # Struct functions: Upgrades the structs and increases the price of given struct
 def struct1():
-    global number, cps, structCount1, sincrement1, sprice1, displayNumber
+    global number, cps, structCount1, sprice1, displayNumber
     if number >= sprice1:
         number -= sprice1
-        sprice1 += int(sincrement1)
-        sincrement1 += (sincrement1 * 1.3) - sincrement1
+        structCount1 += 1
+        sprice1 = int(10 * 1.15 ** structCount1)
         updateUI()
         cps += 0.1
-        structCount1 += 1
 
 
 def struct2():
-    global number, cps, structCount2, sincrement2, sprice2, displayNumber
+    global number, cps, structCount2, sprice2, displayNumber
     if number >= sprice2:
         number -= sprice2
-        sprice2 += int(sincrement2)
-        sincrement2 += (sincrement2 * 2.1) - sincrement2
+        sprice2 = int(100 * 1.15 ** structCount2)
         updateUI()
         cps += 1
         structCount2 += 1
@@ -72,8 +68,6 @@ def idle():
     cps = round(cps, 1)
     number += cps
     number = round(number, 1)
-    print(number)
-    print(displayNumber)
     window.after(1000, idle)
     updateUI()
     placeButtons()
