@@ -5,7 +5,7 @@ import math
 # Window and window config
 window = tk.Tk()
 window.title("GUI")
-window.geometry("600x600")
+window.geometry("800x800")
 
 # General game variables
 number = 0
@@ -14,13 +14,15 @@ cps = 0
 displayNumber = 0
 
 # Struct variables
-sprice1 = 10
+sprice1 = 15
 structCount1 = 0
+structPower1 = 0.1
 sprice2 = 100
 structCount2 = 0
+structPower2 = 1
 
 # Upgrade variables
-uprice1 = 50
+uprice1 = 100
 upgradeCount1 = 0
 
 
@@ -37,27 +39,27 @@ def struct1():
     if number >= sprice1:
         number -= sprice1
         structCount1 += 1
-        sprice1 = int(10 * 1.15 ** structCount1)
+        sprice1 = int(15 * 1.15 ** structCount1)
         updateUI()
-        cps += 0.1
+
 
 
 def struct2():
     global number, cps, structCount2, sprice2, displayNumber
     if number >= sprice2:
         number -= sprice2
+        structCount2 += 1
         sprice2 = int(100 * 1.15 ** structCount2)
         updateUI()
-        cps += 1
-        structCount2 += 1
 
 
 # Upgrade functions: Upgrades the given thing and increases the price of given upgrade
 def upgrade1():
-    global number, clickPower, uprice1, upgradeCount1, displayNumber
+    global number, clickPower, uprice1, upgradeCount1, displayNumber, structPower1
     if number >= uprice1:
         number -= uprice1
         clickPower += 1
+        structPower1 = structPower1 * 2
         uprice1 += (uprice1 * 5) - uprice1
         upgradeCount1 += 1
         updateUI()
@@ -75,17 +77,18 @@ def idle():
 
 def placeButtons():
     global number
-    if number >= 10:
-        structButton1.place(x=400)
+    if number >= 15:
+        structButton1.place(x=600)
     if number >= 100:
-        structButton2.place(x=400, y=20)
-    if structCount1 == 10:
+        structButton2.place(x=600, y=30)
+    if structCount1 == 1:
         upgradeButton1.place(x=33)
 
 
 def updateUI():
-    global displayNumber, cps, number
+    global displayNumber, cps, number, structCount2, structCount1, structPower1, structPower2
     placeButtons()
+    cps = (structCount1 * structPower1) + (structCount2 * structPower2)
     cps = round(cps, 1)
     number = round(number, 1)
     displayNumber = math.floor(number)
@@ -97,15 +100,16 @@ def updateUI():
 
 
 # Score text
-score = Label(window, text="0 CO2", font="Helvetica, 20", padx=20, pady=50)
+score = Label(window, text="0 CO2", font="Helvetica, 20", padx=20, pady=20)
 score.pack()
 
-perSecond = Label(window, text="0 Offset/s", font="Helvetica, 20", padx=20, pady=10)
-perSecond.pack()
-
 # Clicker button
-button1 = Button(window, command=click)
-button1.place(x=275, y=100, width=50, height=50)
+button1 = Button(window, command=click, pady=15, padx=20)
+button1.pack()
+
+# CO2/s
+perSecond = Label(window, text="0 Offset/s", font="Helvetica, 20", padx=20, pady=0)
+perSecond.pack()
 
 # Struct buttons
 structButton1 = Button(window, text="Offset/s struct: 10 CO2 (0)", command=struct1)
