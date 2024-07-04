@@ -1,10 +1,12 @@
 # Imports
 from tkinter import *
 import tkinter as tk
+from tktooltip import tooltip
 import math
+
 # Window and window config
 window = tk.Tk()
-window.title("GUI")
+window.tile("GUI")
 window.geometry("800x800")
 
 # General game variables
@@ -20,6 +22,9 @@ structPower1 = 0.1
 sprice2 = 100
 structCount2 = 0
 structPower2 = 1
+sprice3 = 1100
+structCount3 = 0
+structPower3 = 8
 
 # Upgrade variables
 uprice1 = 100
@@ -43,7 +48,6 @@ def struct1():
         updateUI()
 
 
-
 def struct2():
     global number, cps, structCount2, sprice2, displayNumber
     if number >= sprice2:
@@ -53,14 +57,24 @@ def struct2():
         updateUI()
 
 
+def struct3():
+    global number, cps, structCount3, sprice3, displayNumber
+    if number >= sprice3:
+        number -= sprice3
+        structCount3 += 1
+        sprice3 = int(1100 * 1.15 ** structCount3)
+        updateUI()
+
+
 # Upgrade functions: Upgrades the given thing and increases the price of given upgrade
 def upgrade1():
     global number, clickPower, uprice1, upgradeCount1, displayNumber, structPower1
     if number >= uprice1:
         number -= uprice1
-        clickPower += 1
+        clickPower *= 2
         structPower1 = structPower1 * 2
-        uprice1 += (uprice1 * 5) - uprice1
+        if upgradeCount1 < 2:
+            uprice1 += (uprice1 * 5) - uprice1
         upgradeCount1 += 1
         updateUI()
 
@@ -112,8 +126,9 @@ perSecond = Label(window, text="0 Offset/s", font="Helvetica, 20", padx=20, pady
 perSecond.pack()
 
 # Struct buttons
-structButton1 = Button(window, text="Offset/s struct: 10 CO2 (0)", command=struct1)
+structButton1 = Button(window, text="Offset/s struct: 15 CO2 (0)", command=struct1)
 structButton2 = Button(window, text="Offset/s struct: 100 CO2 (0)", command=struct2)
+structButton3 = Button(window, text="Offset/s struct: 1100 CO2 (0)", command=struct3)
 
 # Upgrade buttons
 upgradeButton1 = Button(window, text="Click power upgrade: 50 CO2 (0)", command=upgrade1)
